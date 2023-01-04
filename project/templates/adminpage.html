@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>
+  Admin Page
+</h1>
+<h4>Transacation</h4>
+<table>
+  <tr>
+    <th>Id</th>
+    <th>Date</th>
+    <th>User</th>
+    <th>Category</th>
+    <th>Debit</th>
+    <th>Credit</th>
+    <th>Balance</th><th>Action</th>
+  </tr>
+  {%for i in value%}
+  <tr>
+  <td>{{i.id}}</td>
+    <td>{{i.Date}}</td>
+    <td>{{i.User}}</td>
+    <td>{{i.Category}}</td>
+    <td>{{i.Debit}}</td>
+    <td>{{i.Credit}}</td>
+    <td>{{i.Balance}}</td>
+    <td><a href="/trancedit/{{i.id}}">Edit</a></td>
+      <td><a href="/trancdelete/{{i.id}}">Delete</a></td>
+  </tr>
+
+  {% endfor %}
+</table>
+<br>
+    <table>
+        <tr><td>
+            <a href="/friend/"> Friend request</a>
+        </td></tr>
+        <tr><td>
+            <a href="/debit/{{username}}"> Debit</a>
+        </td></tr>
+      <tr><td>
+            <a href="/credit/{{username}}"> Credit</a>
+        </td></tr>
+        <tr><td>
+            <a href="/catadd/">Add Category</a>
+        </td></tr>
+
+    </table>
+</body>
+</html>

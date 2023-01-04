@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>
+  Admin Page
+</h1>
+<h4>Transacation</h4>
+<table>
+  <tr>
+    <th>Id</th>
+    <th>Name</th>
+    <th>Address</th>
+    <th>Username</th>
+    <td>Password</td>
+  </tr>
+  {%for i in value%}
+  <tr>
+  <td>{{i.id}}</td>
+    <td>{{i.User}}</td>
+    <td>{{i.Address}}</td>
+    <td>{{i.Username}}</td>
+    <td>{{i.Password}}</td>
+    <td>
+            <a href="/friendaccept/{{i.id}}">Accept</a>
+
+    </td>
+    <td>
+            <a href="/frienddelete/{{i.id}}">Delete</a>
+
+    </td>
+  </tr>
+
+  {% endfor %}
+</table>
+<br>
+
+</body>
+</html>
