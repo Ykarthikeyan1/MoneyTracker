@@ -112,8 +112,6 @@ def friendpage(request,username):
     return render(request, 'friendpage.html',{'username':username})
 def transcdelete(request,id):
     Table.objects.get(id=id).delete()
-     return redirect('/adminpage/Admin')
-def transedit(request,id):
     return redirect('/adminpage/Admin')
 
 
