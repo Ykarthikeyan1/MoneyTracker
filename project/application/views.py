@@ -66,6 +66,7 @@ def debit(request,username):
         users.User = User
         users.Category = "Income"
         users.Debit = Debit
+        users.Credit = 0
         users.save()
         last_rowd = Table.objects.last()
         debit = last_rowd.Debit
@@ -89,6 +90,7 @@ def credit(request,username):
         users.User = User
         users.Category = Categorys
         users.Credit = credit
+        users.Debit = 0
         users.save()
         last_rowd = Table.objects.last()
         credit = last_rowd.Credit
@@ -118,26 +120,69 @@ def friendpage(request,username):
     return render(request, 'friendpage.html',{'username':username})
 def transcdelete(request,id):
     Table.objects.get(id=id).delete()
+    latest_record = Table.objects.all().order_by('-id').first()
+    lid = latest_record.id
+    id = id + 1
+    for id in range(id, lid + 1):
+        try:
+            record = Table.objects.get(id=id)
+            credit = record.Credit
+            debit = record.Debit
+            previous = Table.objects.filter(id__lt=id).order_by('-id').values('Balance').first()
+            if latest_record is None:
+                balance = 0
+            else:
+                balance = previous['Balance']
+            balance = balance + debit - credit
+            record.Balance = balance
+            record.save()
+        except:
+            continue
     return redirect('/adminpage/Admin')
 
 def transedit(request,id):
-    credit=0
-    debit=0
     cat=Category.objects.all()
     details = Table.objects.filter(id=id)
     data = Table.objects.get(id=id)
     if request.method =='POST':
         category=request.POST.get('category')
         method=request.POST.get('method')
-        amount = request.POST.get('amount')
+        amount = int(request.POST.get('amount'))
         data.Category=category
         if method=='Debit':
-            data.Debit=amount
-            data.Credit = credit
+            debit=amount
+            credit = 0
         elif method=='Credit':
-            data.Credit=amount
-            data.Debit = debit
+            credit=amount
+            debit = 0
+        data.Credit = credit
+        data.Debit = debit
+        latest_record = Table.objects.filter(id__lt=id).order_by('-id').values('Balance').first()
+        if latest_record is None:
+            balance=0
+        else:
+            balance = latest_record['Balance']
+        data.Balance=((balance-credit)+debit)
         data.save()
+        latest_record = Table.objects.all().order_by('-id').first()
+        lid = latest_record.id
+        id=id+1
+        for id in range(id,lid+1) :
+            try:
+                record = Table.objects.get(id=id)
+                credit = record.Credit
+                debit = record.Debit
+                previous = Table.objects.filter(id__lt=id).order_by('-id').values('Balance').first()
+                if latest_record is None:
+                    balance = 0
+                else:
+                    balance = previous['Balance']
+                balance = balance + debit - credit
+                record.Balance = balance
+                record.save()
+            except:
+                continue
+
         return redirect('/adminpage/Admin')
     return render(request,'transedit.html',{'value':details,'a':data,'values':cat})
 
