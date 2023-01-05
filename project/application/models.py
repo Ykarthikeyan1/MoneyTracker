@@ -9,7 +9,7 @@ class friend(models.Model):
     Status = models.BooleanField(default=False)
 
 class Table(models.Model):
-    Date=models.DateTimeField(auto_now_add=True)
+    Date = models.DateField(auto_now_add=True)
     User=models.CharField(max_length=50)
     Category = models.CharField(max_length=50)
     Debit=models.IntegerField(null=True)

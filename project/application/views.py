@@ -1,9 +1,7 @@
-from django.shortcuts import render
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
+
 from .models import friend,Category,Table
 from django.shortcuts import render,redirect,HttpResponse
-from django.db.models import F
+
 
 
 
@@ -71,8 +69,12 @@ def debit(request,username):
         users.save()
         last_rowd = Table.objects.last()
         debit = last_rowd.Debit
+
         last_rowb = Table.objects.exclude(Balance=None).last()
-        balance = last_rowb.Balance
+        if last_rowb is None:
+            balance = 0
+        else:
+            balance = last_rowb.Balance
         last_row = Table.objects.last()
         last_row.Balance=debit+balance
         last_row.save()
@@ -90,10 +92,14 @@ def credit(request,username):
         users.save()
         last_rowd = Table.objects.last()
         credit = last_rowd.Credit
+
         last_rowb = Table.objects.exclude(Balance=None).last()
-        balance = last_rowb.Balance
+        if last_rowb is None:
+            balance = 0
+        else:
+            balance = last_rowb.Balance
         last_row = Table.objects.last()
-        last_row.Balance=balance-credit
+        last_row.Balance = balance - credit
         last_row.save()
     return render(request,'creditadd.html',{'value':a})
 
@@ -134,3 +140,4 @@ def transedit(request,id):
         data.save()
         return redirect('/adminpage/Admin')
     return render(request,'transedit.html',{'value':details,'a':data,'values':cat})
+
