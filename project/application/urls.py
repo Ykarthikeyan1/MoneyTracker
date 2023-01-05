@@ -6,6 +6,7 @@ urlpatterns=[
     path('adminlogin/', views.adminlogin),
     path('',views.registerpage),
     path('adminpage/<str:username>', views.adminpage),
+    path('transedit/<int:id>', views.transedit),
     path('credit/<str:username>', views.credit),
     path('friendlogin/', views.friendlogin),
     path('debit/<str:username>',views.debit),

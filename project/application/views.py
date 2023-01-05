@@ -114,4 +114,23 @@ def transcdelete(request,id):
     Table.objects.get(id=id).delete()
     return redirect('/adminpage/Admin')
 
-
+def transedit(request,id):
+    credit=0
+    debit=0
+    cat=Category.objects.all()
+    details = Table.objects.filter(id=id)
+    data = Table.objects.get(id=id)
+    if request.method =='POST':
+        category=request.POST.get('category')
+        method=request.POST.get('method')
+        amount = request.POST.get('amount')
+        data.Category=category
+        if method=='Debit':
+            data.Debit=amount
+            data.Credit = credit
+        elif method=='Credit':
+            data.Credit=amount
+            data.Debit = debit
+        data.save()
+        return redirect('/adminpage/Admin')
+    return render(request,'transedit.html',{'value':details,'a':data,'values':cat})
