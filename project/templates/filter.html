@@ -5,10 +5,18 @@
     <title>Title</title>
 </head>
 <body>
-<h1>
-  Admin Page
-</h1>
-<h4>Transacation</h4>
+
+<form method="POST" >
+    {% csrf_token %}
+    <table>
+        <tr>{%for i in a%}
+            <td><input type="checkbox" name="option" value="{{i.Category}}">{{i.Category}}</label></td>{%endfor%}</tr>
+        <tr><td><td>
+                <input type="submit" value="Filter">
+            </td></td></tr>
+    </table>
+
+</form>
 <table>
   <tr>
     <th>Id</th>
@@ -36,23 +44,6 @@
 
   {% endfor %}
 </table>
-<br>
-    <table>
-        <tr><td>
-            <a href="/friend/"> Friend request</a>
-        </td></tr>
-        <tr><td>
-            <a href="/debit/{{username}}"> Debit</a>
-        </td></tr>
-      <tr><td>
-            <a href="/credit/{{username}}"> Credit</a>
-        </td></tr>
-        <tr><td>
-            <a href="/catadd/">Add Category</a>
-        </td></tr><tr><td>
-            <a href="/filter/">filter</a>
-        </td></tr>
 
-    </table>
 </body>
 </html>

@@ -14,7 +14,7 @@ urlpatterns=[
     path('friendpage/<str:username>',views.friendpage),
     path('friendaccept/<int:id>', views.friendaccept),
     path('frienddelete/<int:id>', views.frienddelete),
-
+    path('filter/', views.filter),
     path('trancdelete/<int:id>', views.transcdelete),
 
 ]

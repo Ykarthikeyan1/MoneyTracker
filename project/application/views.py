@@ -191,3 +191,13 @@ def transedit(request,id):
         return redirect('/adminpage/Admin')
     return render(request,'transedit.html',{'value':details,'a':data,'values':cat})
 
+def filter(request):
+    datas = Table.objects.all()
+    data = Category.objects.all()
+    if request.method == 'POST':
+        selected_options = request.POST.getlist('option')
+        dat = Table.objects.filter(Category__in=selected_options)
+        return render(request, 'filter.html', {'value': dat, 'a': data})
+
+
+    return render(request, 'filter.html', {'value': datas,'a':data})
