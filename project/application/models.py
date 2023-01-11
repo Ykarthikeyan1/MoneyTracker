@@ -12,6 +12,7 @@ class Table(models.Model):
     Date = models.DateField(auto_now_add=True)
     User=models.CharField(max_length=50)
     Category = models.CharField(max_length=50)
+    Description = models.CharField(max_length=50,null=True)
     Debit=models.IntegerField(null=True)
     Credit = models.IntegerField(null=True)
     Balance=models.IntegerField(null=True)

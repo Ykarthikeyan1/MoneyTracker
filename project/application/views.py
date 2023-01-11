@@ -24,9 +24,11 @@ def categoryadd(request):
     if request.method == 'POST':
         name = request.POST.get('name')
         category = request.POST.get('category')
+
         users = Category()
         users.User = name
         users.Category = category
+
         users.save()
 
     return render(request,'categoryadd.html')
@@ -64,6 +66,7 @@ def debit(request,username):
         Debit = request.POST.get('debit')
         users = Table()
         users.User = User
+        users.Description = "None"
         users.Category = "Income"
         users.Debit = Debit
         users.Credit = 0
@@ -86,8 +89,10 @@ def credit(request,username):
         User = username
         Categorys = request.POST.get('category')
         credit = request.POST.get('credit')
+        description = request.POST.get('description')
         users = Table()
         users.User = User
+        users.Description = description
         users.Category = Categorys
         users.Credit = credit
         users.Debit = 0
