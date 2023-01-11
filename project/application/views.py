@@ -43,9 +43,6 @@ def adminlogin(request):
             return HttpResponse('invalid ')
     return render(request,'adminlogin.html')
 
-def adminpage(request,username):
-    datas = Table.objects.all()
-    return render(request, 'adminpage.html', {'value': datas,'username':username})
 
 def friends(request):
     datas =friend .objects.filter(Status=False)
@@ -191,13 +188,13 @@ def transedit(request,id):
         return redirect('/adminpage/Admin')
     return render(request,'transedit.html',{'value':details,'a':data,'values':cat})
 
-def filter(request):
+def adminpage(request,username):
     datas = Table.objects.all()
     data = Category.objects.all()
     if request.method == 'POST':
         selected_options = request.POST.getlist('option')
         dat = Table.objects.filter(Category__in=selected_options)
-        return render(request, 'filter.html', {'value': dat, 'a': data})
+        return render(request, 'filter.html', {'value': dat, 'a': data,'username':username})
 
 
-    return render(request, 'filter.html', {'value': datas,'a':data})
+    return render(request, 'filter.html', {'value': datas,'a':data,'username':username})
