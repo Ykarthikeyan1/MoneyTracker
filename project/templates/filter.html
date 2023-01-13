@@ -5,18 +5,22 @@
     <title>Title</title>
 </head>
 <body>
+<h1>Transaction details </h1>
 
 <form method="POST" >
-    {% csrf_token %}
+    {% csrf_token %}<h2>Filter</h2>
     <table>
         <tr>{%for i in a%}
             <td><input type="checkbox" name="option" value="{{i.Category}}">{{i.Category}}</label></td>{%endfor%}</tr>
+        <tr>{%for i in date%}
+            <td><input type="checkbox" name="dates" value="{{i}}">{{i}}</label></td>{%endfor%}</tr>
         <tr><td><td>
                 <input type="submit" value="Filter">
             </td></td></tr>
     </table>
 
 </form>
+<h2>Transaction </h2>
 <table>
   <tr>
     <th>Id</th>
@@ -44,6 +48,7 @@
 
   {% endfor %}
 </table>
+<h2>Others</h2>
 <table>
         <tr><td>
             <a href="/friend/"> Friend request</a>

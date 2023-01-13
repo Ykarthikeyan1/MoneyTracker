@@ -1,6 +1,6 @@
-
 from .models import friend,Category,Table
 from django.shortcuts import render,redirect,HttpResponse
+from datetime import datetime
 
 
 
@@ -191,10 +191,14 @@ def transedit(request,id):
 def adminpage(request,username):
     datas = Table.objects.all()
     data = Category.objects.all()
+    date = Table.objects.values_list('Date', flat=True).distinct()
     if request.method == 'POST':
+
         selected_options = request.POST.getlist('option')
-        dat = Table.objects.filter(Category__in=selected_options)
-        return render(request, 'filter.html', {'value': dat, 'a': data,'username':username})
+        selected_option = request.POST.getlist('dates')
+        selected_optione = [datetime.strptime(date, "%b. %d, %Y").strftime("%Y-%m-%d") for date in selected_option]
+        dat = Table.objects.filter(Category__in=selected_options) | Table.objects.filter(Date__in=selected_optione)
+        return render(request, 'filter.html', {'value': dat, 'a': data,'username':username,'date':date})
 
 
-    return render(request, 'filter.html', {'value': datas,'a':data,'username':username})
+    return render(request, 'filter.html', {'value': datas,'a':data,'username':username,'date':date})
