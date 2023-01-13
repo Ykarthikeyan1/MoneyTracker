@@ -10,8 +10,10 @@
 <form method="POST" >
     {% csrf_token %}<h2>Filter</h2>
     <table>
+        <th>Category</th>
         <tr>{%for i in a%}
             <td><input type="checkbox" name="option" value="{{i.Category}}">{{i.Category}}</label></td>{%endfor%}</tr>
+        <th>Date</th>
         <tr>{%for i in date%}
             <td><input type="checkbox" name="dates" value="{{i}}">{{i}}</label></td>{%endfor%}</tr>
         <tr><td><td>
