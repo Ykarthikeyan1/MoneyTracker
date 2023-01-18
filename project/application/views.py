@@ -60,32 +60,27 @@ def debit(request,username):
     a= Category.objects.all()
     if request.method == 'POST':
         User = username
-        Debit = request.POST.get('debit')
+        Debit = int(request.POST.get('debit'))
         users = Table()
         users.User = User
         users.Description = "None"
         users.Category = "Income"
         users.Debit = Debit
         users.Credit = 0
-        users.save()
-        last_rowd = Table.objects.last()
-        debit = last_rowd.Debit
-
         last_rowb = Table.objects.exclude(Balance=None).last()
         if last_rowb is None:
             balance = 0
         else:
             balance = last_rowb.Balance
-        last_row = Table.objects.last()
-        last_row.Balance=debit+balance
-        last_row.save()
+        users.Balance=Debit+balance
+        users.save()
     return render(request,'debitadd.html',{'value':a})
 def credit(request,username):
     a= Category.objects.all()
     if request.method == 'POST':
         User = username
         Categorys = request.POST.get('category')
-        credit = request.POST.get('credit')
+        credit = int(request.POST.get('credit'))
         description = request.POST.get('description')
         users = Table()
         users.User = User
@@ -93,18 +88,13 @@ def credit(request,username):
         users.Category = Categorys
         users.Credit = credit
         users.Debit = 0
-        users.save()
-        last_rowd = Table.objects.last()
-        credit = last_rowd.Credit
-
         last_rowb = Table.objects.exclude(Balance=None).last()
         if last_rowb is None:
             balance = 0
         else:
             balance = last_rowb.Balance
-        last_row = Table.objects.last()
-        last_row.Balance = balance - credit
-        last_row.save()
+        users.Balance =  balance - credit
+        users.save()
     return render(request,'creditadd.html',{'value':a})
 
 def friendlogin(request):
@@ -135,8 +125,7 @@ def transcdelete(request,id):
                 balance = 0
             else:
                 balance = previous['Balance']
-            balance = balance + debit - credit
-            record.Balance = balance
+            record.Balance = balance + debit - credit
             record.save()
         except:
             continue
