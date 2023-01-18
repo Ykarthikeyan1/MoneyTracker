@@ -168,8 +168,8 @@ def transedit(request,id):
                     balance = 0
                 else:
                     balance = previous['Balance']
-                balance = balance + debit - credit
-                record.Balance = balance
+                record.Balance = balance + debit - credit
+
                 record.save()
             except:
                 continue
