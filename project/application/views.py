@@ -1,6 +1,7 @@
 from .models import friend,Category,Table
 from django.shortcuts import render,redirect,HttpResponse
 from datetime import datetime
+from django.db.models import Sum
 
 
 
@@ -109,7 +110,13 @@ def friendlogin(request):
 
     return render(request,'friendlogin.html')
 def friendpage(request,username):
-    return render(request, 'friendpage.html',{'username':username})
+    data=Table.objects.filter(User=username)
+    debit = Table.objects.filter(User=username).values_list('Debit', flat=True)
+    credit= Table.objects.filter(User=username).values_list('Credit', flat=True)
+    debit_sum = sum([d for d in debit])
+    credit_sum = sum([c for c in credit])
+    balance=debit_sum-credit_sum
+    return render(request, 'friendpage.html',{'username':username,'value':data,'balance':balance})
 def transcdelete(request,id):
     Table.objects.get(id=id).delete()
     latest_record = Table.objects.all().order_by('-id').first()
