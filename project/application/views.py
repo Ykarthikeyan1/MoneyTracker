@@ -1,7 +1,7 @@
 from .models import friend,Category,Table
 from django.shortcuts import render,redirect,HttpResponse
 from datetime import datetime
-from django.db.models import Count
+
 
 
 
@@ -133,17 +133,24 @@ def transcdelete(request,id):
         for id in range(id, lid + 1):
             try:
                 record = Table.objects.get(id=id)
-                credit = record.Credit
-                debit = record.Debit
+                credit = float(record.Credit)
+                count = friend.objects.all()
+                count = len(count)
+                remain = count - 1
+                credit_balance = float((remain / count) * credit)
+                debit = float(record.Debit)
                 previous = Table.objects.filter(id__lt=id).order_by('-id').values('Balance').first()
                 if previous is None:
-                    balance = 0
+                    balance = float(0)
                 else:
-                    balance = previous['Balance']
-                record.Balance = balance + debit - credit
+                    balance = float(previous['Balance'])
+                record.Balance = balance - credit_balance + debit
+
                 record.save()
             except:
                 continue
+
+
     return redirect('/adminpage/Admin')
 
 def transedit(request,id):
@@ -158,17 +165,23 @@ def transedit(request,id):
         if method=='Debit':
             debit=amount
             credit = 0
+            credit_balance=0
         elif method=='Credit':
             credit=amount
+            count = friend.objects.all()
+            count = len(count)
+            remain = count - 1
+            credit_balance = float((remain / count) * credit)
             debit = 0
         data.Credit = credit
         data.Debit = debit
         latest_record = Table.objects.filter(id__lt=id).order_by('-id').values('Balance').first()
         if latest_record is None:
-            balance=0
+            balance=float(0)
         else:
-            balance = latest_record['Balance']
-        data.Balance=((balance-credit)+debit)
+            balance = float(latest_record['Balance'])
+
+        data.Balance =(balance-credit_balance)+debit
         data.save()
         latest_record = Table.objects.all().order_by('-id').first()
         lid = latest_record.id
@@ -176,14 +189,18 @@ def transedit(request,id):
         for id in range(id,lid+1) :
             try:
                 record = Table.objects.get(id=id)
-                credit = record.Credit
-                debit = record.Debit
+                credit =float(record.Credit)
+                count = friend.objects.all()
+                count = len(count)
+                remain = count - 1
+                credit_balance = float((remain / count) * credit)
+                debit = float(record.Debit)
                 previous = Table.objects.filter(id__lt=id).order_by('-id').values('Balance').first()
                 if latest_record is None:
-                    balance = 0
+                    balance =float(0)
                 else:
-                    balance = previous['Balance']
-                record.Balance = balance + debit - credit
+                    balance = float(previous['Balance'])
+                record.Balance = balance  - credit_balance + debit
 
                 record.save()
             except:
