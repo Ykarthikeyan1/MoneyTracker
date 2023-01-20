@@ -1,7 +1,7 @@
 from .models import friend,Category,Table
 from django.shortcuts import render,redirect,HttpResponse
 from datetime import datetime
-from django.db.models import Sum
+from django.db.models import Count
 
 
 
@@ -61,7 +61,7 @@ def debit(request,username):
     a= Category.objects.all()
     if request.method == 'POST':
         User = username
-        Debit = int(request.POST.get('debit'))
+        Debit = float(request.POST.get('debit'))
         users = Table()
         users.User = User
         users.Description = "None"
@@ -70,9 +70,9 @@ def debit(request,username):
         users.Credit = 0
         last_rowb = Table.objects.exclude(Balance=None).last()
         if last_rowb is None:
-            balance = 0
+            balance = float(0)
         else:
-            balance = last_rowb.Balance
+            balance = float(last_rowb.Balance)
         users.Balance=Debit+balance
         users.save()
     return render(request,'debitadd.html',{'value':a})
@@ -81,7 +81,7 @@ def credit(request,username):
     if request.method == 'POST':
         User = username
         Categorys = request.POST.get('category')
-        credit = int(request.POST.get('credit'))
+        credit = float(request.POST.get('credit'))
         description = request.POST.get('description')
         users = Table()
         users.User = User
@@ -91,9 +91,9 @@ def credit(request,username):
         users.Debit = 0
         last_rowb = Table.objects.exclude(Balance=None).last()
         if last_rowb is None:
-            balance = 0
+            balance =float(0)
         else:
-            balance = last_rowb.Balance
+            balance =float(last_rowb.Balance)
         users.Balance =  balance - credit
         users.save()
     return render(request,'creditadd.html',{'value':a})
@@ -110,32 +110,36 @@ def friendlogin(request):
 
     return render(request,'friendlogin.html')
 def friendpage(request,username):
-    data=Table.objects.filter(User=username)
+    data=Table.objects.all()
     debit = Table.objects.filter(User=username).values_list('Debit', flat=True)
-    credit= Table.objects.filter(User=username).values_list('Credit', flat=True)
-    debit_sum = sum([d for d in debit])
-    credit_sum = sum([c for c in credit])
-    balance=debit_sum-credit_sum
+    credit= Table.objects.exclude(User=username).values_list('Credit', flat=True)
+    debit_sum = float(sum(debit))
+    credit_sum = float(sum(credit))
+    count = friend.objects.all()
+    count=len(count)-1
+    credit_balace=credit_sum/count
+    balance=debit_sum-credit_balace
     return render(request, 'friendpage.html',{'username':username,'value':data,'balance':balance})
 def transcdelete(request,id):
     Table.objects.get(id=id).delete()
     latest_record = Table.objects.all().order_by('-id').first()
-    lid = latest_record.id
-    id = id + 1
-    for id in range(id, lid + 1):
-        try:
-            record = Table.objects.get(id=id)
-            credit = record.Credit
-            debit = record.Debit
-            previous = Table.objects.filter(id__lt=id).order_by('-id').values('Balance').first()
-            if latest_record is None:
-                balance = 0
-            else:
-                balance = previous['Balance']
-            record.Balance = balance + debit - credit
-            record.save()
-        except:
-            continue
+    if latest_record is not None:
+        lid = latest_record.id
+        id = id + 1
+        for id in range(id, lid + 1):
+            try:
+                record = Table.objects.get(id=id)
+                credit = record.Credit
+                debit = record.Debit
+                previous = Table.objects.filter(id__lt=id).order_by('-id').values('Balance').first()
+                if latest_record is None:
+                    balance = 0
+                else:
+                    balance = previous['Balance']
+                record.Balance = balance + debit - credit
+                record.save()
+            except:
+                continue
     return redirect('/adminpage/Admin')
 
 def transedit(request,id):

@@ -20,7 +20,7 @@
     <th>Debit</th>
     <th>Credit</th>
       <th>Over All Balance</th>
-    <th>Action</th>
+
 
   </tr>
   {%for i in value%}
@@ -33,8 +33,7 @@
     <td>{{i.Debit}}</td>
     <td>{{i.Credit}}</td>
       <td>{{i.Balance}}</td>
-    <td><a href="/transedit/{{i.id}}">Edit</a></td>
-      <td><a href="/trancdelete/{{i.id}}">Delete</a></td>
+
   </tr>
 
   {% endfor %}

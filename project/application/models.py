@@ -13,9 +13,9 @@ class Table(models.Model):
     User=models.CharField(max_length=50)
     Category = models.CharField(max_length=50)
     Description = models.CharField(max_length=50,null=True)
-    Debit=models.IntegerField(null=True)
-    Credit = models.IntegerField(null=True)
-    Balance=models.IntegerField(null=True)
+    Debit=models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    Credit = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    Balance=models.DecimalField(max_digits=10, decimal_places=2,null=True)
 
 class Category(models.Model):
     User = models.CharField(max_length=50)
