@@ -94,7 +94,11 @@ def credit(request,username):
             balance =float(0)
         else:
             balance =float(last_rowb.Balance)
-        users.Balance =  balance - credit
+        count = friend.objects.all()
+        count = len(count)
+        remain=count-1
+        credit_balance=(remain/count)*credit
+        users.Balance =  balance - credit_balance
         users.save()
     return render(request,'creditadd.html',{'value':a})
 
