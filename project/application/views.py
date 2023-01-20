@@ -196,23 +196,18 @@ def adminpage(request,username):
     datas = Table.objects.all()
     data = Category.objects.all()
     date = Table.objects.values_list('Date', flat=True).distinct()
-    debit = Table.objects.filter(User=username).values_list('Debit', flat=True)
-    credit = Table.objects.filter(User=username).values_list('Credit', flat=True)
-    debit_sum = sum([d for d in debit])
-    credit_sum = sum([c for c in credit])
-    balance = debit_sum - credit_sum
+    credit = Table.objects.values_list('Credit', flat=True)
+    credit_sum = sum(credit)
+
     if request.method == 'POST':
 
         selected_options = request.POST.getlist('option')
         selected_option = request.POST.getlist('dates')
         selected_optione = [datetime.strptime(date, "%b. %d, %Y").strftime("%Y-%m-%d") for date in selected_option]
         dat = Table.objects.filter(Category__in=selected_options) | Table.objects.filter(Date__in=selected_optione)
-        debit = Table.objects.filter(User=username).values_list('Debit', flat=True)
-        credit = Table.objects.filter(User=username).values_list('Credit', flat=True)
-        debit_sum = sum([d for d in debit])
-        credit_sum = sum([c for c in credit])
-        balance = debit_sum - credit_sum
-        return render(request, 'filter.html', {'value': dat, 'a': data,'username':username,'date':date,'balance':balance})
+        credit = dat.values_list('Credit', flat=True)
+        credit_sum = sum(credit)
+        return render(request, 'filter.html', {'value': dat, 'a': data,'username':username,'date':date,'expenses':credit_sum})
 
 
-    return render(request, 'filter.html', {'value': datas,'a':data,'username':username,'date':date,'balance':balance})
+    return render(request, 'filter.html', {'value': datas,'a':data,'username':username,'date':date,'expenses':credit_sum})
