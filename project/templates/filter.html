@@ -23,16 +23,19 @@
 
 </form>
 <h2>Transaction </h2>
-<table>
+<table cellspacing="10" cellpadding="5">
   <tr>
     <th>Id</th>
     <th>Date</th>
     <th>User</th>
     <th>Category</th>
-      <th>Description</th>
     <th>Debit</th>
     <th>Credit</th>
-    <th>Remaing</th><th>Action</th>
+      <th>Getback</th>
+    <th>Remaing</th>
+      <th>Debit_Balance</th>
+
+      <th>Action</th>
   </tr>
   {%for i in value%}
   <tr>
@@ -40,10 +43,12 @@
     <td>{{i.Date}}</td>
     <td>{{i.User}}</td>
     <td>{{i.Category}}</td>
-      <td>{{i.Description}}</td>
     <td>{{i.Debit}}</td>
     <td>{{i.Credit}}</td>
+      <td>{{i.Getback}}</td>
     <td>{{i.Balance}}</td>
+      <td>{{i.Debit_Balance}}</td>
+
     <td><a href="/transedit/{{i.id}}">Edit</a></td>
       <td><a href="/trancdelete/{{i.id}}">Delete</a></td>
   </tr>

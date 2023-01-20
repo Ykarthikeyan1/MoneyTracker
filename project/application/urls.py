@@ -10,6 +10,7 @@ urlpatterns=[
     path('credit/<str:username>', views.credit),
     path('friendlogin/', views.friendlogin),
     path('debit/<str:username>',views.debit),
+path('getback/<str:username>',views.getback),
     path('catadd/',views.categoryadd),
     path('friendpage/<str:username>',views.friendpage),
     path('friendaccept/<int:id>', views.friendaccept),

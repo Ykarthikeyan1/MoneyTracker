@@ -12,10 +12,12 @@ class Table(models.Model):
     Date = models.DateField(auto_now_add=True)
     User=models.CharField(max_length=50)
     Category = models.CharField(max_length=50)
-    Description = models.CharField(max_length=50,null=True)
     Debit=models.DecimalField(max_digits=10, decimal_places=2,null=True)
     Credit = models.DecimalField(max_digits=10, decimal_places=2,null=True)
     Balance=models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    Debit_Balance=models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    Getback = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+
 
 class Category(models.Model):
     User = models.CharField(max_length=50)

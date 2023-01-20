@@ -58,24 +58,47 @@ def frienddelete(request,id):
     friend.objects.get(id=id).delete()
     return redirect('/friend')
 def debit(request,username):
-    a= Category.objects.all()
     if request.method == 'POST':
         User = username
         Debit = float(request.POST.get('debit'))
         users = Table()
         users.User = User
-        users.Description = "None"
         users.Category = "Income"
         users.Debit = Debit
         users.Credit = 0
+        users.Getback = 0
         last_rowb = Table.objects.exclude(Balance=None).last()
         if last_rowb is None:
             balance = float(0)
+            debit_balance = float(0)
         else:
             balance = float(last_rowb.Balance)
+            debit_balance = float(last_rowb.Debit_Balance)
         users.Balance=Debit+balance
+        users.Debit_Balance = Debit + debit_balance
         users.save()
-    return render(request,'debitadd.html',{'value':a})
+    return render(request,'debitadd.html')
+def getback(request,username):
+    if request.method == 'POST':
+        User = username
+        getback = float(request.POST.get('back'))
+        users = Table()
+        users.User = User
+        users.Category = "Getback"
+        users.Debit = 0
+        users.Credit = 0
+        users.Getback = getback
+        last_rowb = Table.objects.exclude(Balance=None).last()
+        if last_rowb is None:
+            balance = float(0)
+            debit_balance = float(0)
+        else:
+            balance = float(last_rowb.Balance)
+            debit_balance=float(last_rowb.Debit_Balance)
+        users.Balance=balance
+        users.Debit_Balance =  debit_balance -getback
+        users.save()
+    return render(request,'getback.html')
 def credit(request,username):
     a= Category.objects.all()
     if request.method == 'POST':
@@ -85,20 +108,23 @@ def credit(request,username):
         description = request.POST.get('description')
         users = Table()
         users.User = User
-        users.Description = description
         users.Category = Categorys
         users.Credit = credit
         users.Debit = 0
+        users.Getback = 0
         last_rowb = Table.objects.exclude(Balance=None).last()
         if last_rowb is None:
             balance =float(0)
+            debit_balance = float(0)
         else:
             balance =float(last_rowb.Balance)
+            debit_balance = float(last_rowb.Debit_Balance)
         count = friend.objects.all()
         count = len(count)
         remain=count-1
         credit_balance=(remain/count)*credit
         users.Balance =  balance - credit_balance
+        users.Debit_Balance=debit_balance
         users.save()
     return render(request,'creditadd.html',{'value':a})
 
@@ -123,7 +149,15 @@ def friendpage(request,username):
     count=len(count)
     credit_balace=credit_sum/count
     balance=debit_sum-credit_balace
-    return render(request, 'friendpage.html',{'username':username,'value':data,'balance':balance})
+    #
+    credit = Table.objects.filter(User=username).values_list('Credit', flat=True)
+    getback = Table.objects.filter(User=username).values_list('Getback', flat=True)
+    credit_sum = float(sum(credit))
+    getback_sum = float(sum(getback))
+    remain = count - 1
+    credit_balance = float((remain / count) * credit_sum)
+    extra=credit_balance-getback_sum
+    return render(request, 'friendpage.html',{'username':username,'value':data,'balance':balance,'get_back':extra})
 def transcdelete(request,id):
     Table.objects.get(id=id).delete()
     latest_record = Table.objects.all().order_by('-id').first()
@@ -140,12 +174,15 @@ def transcdelete(request,id):
                 credit_balance = float((remain / count) * credit)
                 debit = float(record.Debit)
                 previous = Table.objects.filter(id__lt=id).order_by('-id').values('Balance').first()
+                previous_debit_balance = Table.objects.filter(id__lt=id).order_by('-id').values('Debit_Balance').first()
                 if previous is None:
                     balance = float(0)
+                    debit_balance = float(0)
                 else:
                     balance = float(previous['Balance'])
+                    debit_balance = float(previous_debit_balance['Debit_Balance'])
                 record.Balance = balance - credit_balance + debit
-
+                record.Debit_Balance = debit_balance + debit
                 record.save()
             except:
                 continue
@@ -176,12 +213,16 @@ def transedit(request,id):
         data.Credit = credit
         data.Debit = debit
         latest_record = Table.objects.filter(id__lt=id).order_by('-id').values('Balance').first()
+        latest_debit_balance = Table.objects.filter(id__lt=id).order_by('-id').values('Debit_Balance').first()
         if latest_record is None:
             balance=float(0)
+            debit_balance = float(0)
         else:
             balance = float(latest_record['Balance'])
+            debit_balance = float(latest_debit_balance['Debit_Balance'])
 
         data.Balance =(balance-credit_balance)+debit
+        data.Debit_Balance = debit_balance + debit
         data.save()
         latest_record = Table.objects.all().order_by('-id').first()
         lid = latest_record.id
@@ -196,12 +237,16 @@ def transedit(request,id):
                 credit_balance = float((remain / count) * credit)
                 debit = float(record.Debit)
                 previous = Table.objects.filter(id__lt=id).order_by('-id').values('Balance').first()
+                previous_debit_balance = Table.objects.filter(id__lt=id).order_by('-id').values('Debit_Balance').first()
                 if latest_record is None:
                     balance =float(0)
+                    debit_balance = float(0)
+
                 else:
                     balance = float(previous['Balance'])
+                    debit_balance = float(previous_debit_balance['Debit_Balance'])
                 record.Balance = balance  - credit_balance + debit
-
+                record.Debit_Balance = debit_balance  + debit
                 record.save()
             except:
                 continue

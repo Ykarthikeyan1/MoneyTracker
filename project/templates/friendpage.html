@@ -16,10 +16,12 @@
     <th>Date</th>
     <th>User</th>
     <th>Category</th>
-      <th>Description</th>
+
     <th>Debit</th>
     <th>Credit</th>
+      <th>Getback</th>
       <th>Remaining</th>
+      <th>Debit_Balance</th>
 
 
   </tr>
@@ -29,21 +31,28 @@
     <td>{{i.Date}}</td>
     <td>{{i.User}}</td>
     <td>{{i.Category}}</td>
-      <td>{{i.Description}}</td>
     <td>{{i.Debit}}</td>
     <td>{{i.Credit}}</td>
+      <td>{{i.Getback}}</td>
       <td>{{i.Balance}}</td>
+      <td>{{i.Debit_Balance}}</td>
 
   </tr>
 
   {% endfor %}
 </table>
-<h3>Your Balance : {{balance}}</h3>
+<h3>Your Share : {{balance}} </h3>
+<label>(- indicates need to pay)</label>
+<h3>Extra_Spend : {{get_back}}</h3>
 <br>
     <table>
 
         <tr><td>
             <a href="/debit/{{username}}"> Debit</a>
+        </td></tr>
+        <tr><td>
+            <a href="/getback/{{username}}"> Getback</a>
+            <label>(before get back check the available debit balance)</label>
         </td></tr>
       <tr><td>
             <a href="/credit/{{username}}"> Credit</a>
