@@ -116,7 +116,7 @@ def friendpage(request,username):
     debit_sum = float(sum(debit))
     credit_sum = float(sum(credit))
     count = friend.objects.all()
-    count=len(count)-1
+    count=len(count)
     credit_balace=credit_sum/count
     balance=debit_sum-credit_balace
     return render(request, 'friendpage.html',{'username':username,'value':data,'balance':balance})
@@ -132,7 +132,7 @@ def transcdelete(request,id):
                 credit = record.Credit
                 debit = record.Debit
                 previous = Table.objects.filter(id__lt=id).order_by('-id').values('Balance').first()
-                if latest_record is None:
+                if previous is None:
                     balance = 0
                 else:
                     balance = previous['Balance']
