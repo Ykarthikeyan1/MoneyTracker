@@ -32,7 +32,7 @@
       <th>Description</th>
     <th>Debit</th>
     <th>Credit</th>
-    <th>Balance</th><th>Action</th>
+    <th>Over All Balance</th><th>Action</th>
   </tr>
   {%for i in value%}
   <tr>
@@ -50,6 +50,7 @@
 
   {% endfor %}
 </table>
+<h3>Your Balance : {{balance}}</h3>
 <h2>Others</h2>
 <table>
         <tr><td>
