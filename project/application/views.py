@@ -203,6 +203,7 @@ def transedit(request,id):
             debit=amount
             credit = 0
             credit_balance=0
+            getback=0
         elif method=='Credit':
             credit=amount
             count = friend.objects.all()
@@ -210,8 +211,15 @@ def transedit(request,id):
             remain = count - 1
             credit_balance = float((remain / count) * credit)
             debit = 0
+            getback = 0
+        elif method=='Getback':
+            debit=0
+            credit = 0
+            getback = amount
+            credit_balance=0
         data.Credit = credit
         data.Debit = debit
+        data.Getback=getback
         latest_record = Table.objects.filter(id__lt=id).order_by('-id').values('Balance').first()
         latest_debit_balance = Table.objects.filter(id__lt=id).order_by('-id').values('Debit_Balance').first()
         if latest_record is None:
