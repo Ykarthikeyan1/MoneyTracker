@@ -198,12 +198,13 @@ def transedit(request,id):
         category=request.POST.get('category')
         method=request.POST.get('method')
         amount = int(request.POST.get('amount'))
-        data.Category=category
+
         if method=='Debit':
             debit=amount
             credit = 0
             credit_balance=0
             getback=0
+            data.Category="Income"
         elif method=='Credit':
             credit=amount
             count = friend.objects.all()
@@ -212,10 +213,13 @@ def transedit(request,id):
             credit_balance = float((remain / count) * credit)
             debit = 0
             getback = 0
+            data.Category = category
         elif method=='Getback':
             debit=0
             credit = 0
             getback = amount
+            data.Category = "Getback"
+
             credit_balance=0
         data.Credit = credit
         data.Debit = debit
@@ -230,7 +234,7 @@ def transedit(request,id):
             debit_balance = float(latest_debit_balance['Debit_Balance'])
 
         data.Balance =(balance-credit_balance)+debit
-        data.Debit_Balance = debit_balance + debit
+        data.Debit_Balance = debit_balance + debit - getback
         data.save()
         latest_record = Table.objects.all().order_by('-id').first()
         lid = latest_record.id
@@ -239,6 +243,7 @@ def transedit(request,id):
             try:
                 record = Table.objects.get(id=id)
                 credit =float(record.Credit)
+                getback = float(record.Getback)
                 count = friend.objects.all()
                 count = len(count)
                 remain = count - 1
@@ -249,12 +254,11 @@ def transedit(request,id):
                 if latest_record is None:
                     balance =float(0)
                     debit_balance = float(0)
-
                 else:
                     balance = float(previous['Balance'])
                     debit_balance = float(previous_debit_balance['Debit_Balance'])
                 record.Balance = balance  - credit_balance + debit
-                record.Debit_Balance = debit_balance  + debit
+                record.Debit_Balance = debit_balance  + (debit - getback)
                 record.save()
             except:
                 continue

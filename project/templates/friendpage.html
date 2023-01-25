@@ -10,7 +10,7 @@
 </h1>
  <h3> Welcome {{username}}</h3>
 <h2>Transaction </h2>
-<table>
+<table cellspacing="10" cellpadding="3">
   <tr>
     <th>Id</th>
     <th>Date</th>
@@ -42,8 +42,9 @@
   {% endfor %}
 </table>
 <h3>Your Share : {{balance}} </h3>
-<label>(- indicates need to pay)</label>
+<label>(if (-),sign indicate that need to pay)</label>
 <h3>Extra_Spend : {{get_back}}</h3>
+<label>(you can get back the extra spend )</label>
 <br>
     <table>
 

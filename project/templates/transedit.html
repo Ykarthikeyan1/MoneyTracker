@@ -14,7 +14,9 @@
   <th>CATEGORY</th>
       <th>DEBIT</th>
   <th>CREDIT</th>
-      <th>BALANCE</th>
+      <th>Getback</th>
+    <th>Remaing</th>
+      <th>Debit_Balance</th>
 
     </tr>
 
@@ -27,7 +29,9 @@
       <td>{{i.Category}}</td>
         <td>{{i.Debit}}</td>
       <td>{{i.Credit}}</td>
-        <td>{{i.Balance}}</td>
+         <td>{{i.Getback}}</td>
+    <td>{{i.Balance}}</td>
+      <td>{{i.Debit_Balance}}</td>
 
         <td>
 
@@ -65,18 +69,7 @@
             <label>{{a.User}}</label>
         </td>
     </tr>
-    <tr>
-        <td>
-            <label>Category</label>
-        </td>
-        <td>
-                <select name="category">
-            {% for i in values %}
-            <option value="{{i.Category }}">{{ i.Category }}</option>
-            {% endfor %}
-            </select>
-            </td>
-    </tr><tr>
+     <tr>
         <td>
             <label>select the method</label>
         </td>
@@ -89,6 +82,18 @@
 
         </select>
         </td>
+    </tr>
+    <tr>
+        <td>
+            <label>Category</label>
+        </td>
+        <td>
+                <select name="category">
+            {% for i in values %}
+            <option value="{{i.Category }}">{{ i.Category }}</option>
+            {% endfor %}
+            </select>
+            </td>
     </tr>
     <tr>
         <td>
@@ -112,13 +117,7 @@
         <tr><td>
             <a href="/friend/"> Friend request</a>
         </td></tr>
-        <tr><td>
-            <a href="/debit/{{username}}"> Debit</a>
-        </td></tr>
-      <tr><td>
-            <a href="/credit/{{username}}"> Credit</a>
-        </td></tr>
-        <tr><td>
+
             <a href="/catadd/">Add Category</a>
         </td></tr>
 
