@@ -168,6 +168,7 @@ def transcdelete(request,id):
             try:
                 record = Table.objects.get(id=id)
                 credit = float(record.Credit)
+                getback = float(record.Getback)
                 count = friend.objects.all()
                 count = len(count)
                 remain = count - 1
@@ -175,14 +176,14 @@ def transcdelete(request,id):
                 debit = float(record.Debit)
                 previous = Table.objects.filter(id__lt=id).order_by('-id').values('Balance').first()
                 previous_debit_balance = Table.objects.filter(id__lt=id).order_by('-id').values('Debit_Balance').first()
-                if previous is None:
+                if latest_record is None:
                     balance = float(0)
                     debit_balance = float(0)
                 else:
                     balance = float(previous['Balance'])
                     debit_balance = float(previous_debit_balance['Debit_Balance'])
                 record.Balance = balance - credit_balance + debit
-                record.Debit_Balance = debit_balance + debit
+                record.Debit_Balance = debit_balance + (debit - getback)
                 record.save()
             except:
                 continue
