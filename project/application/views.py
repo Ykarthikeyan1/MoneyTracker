@@ -49,12 +49,12 @@ def friends(request):
     datas =friend .objects.filter(Status=False)
     return render(request, 'friendrequest.html', {'value': datas})
 
-def friendaccept(id):
+def friendaccept(request,id):
     user = friend.objects.get(id=id)
     user.Status = True
     user.save()
     return redirect('/friend')
-def frienddelete(id):
+def frienddelete(request,id):
     friend.objects.get(id=id).delete()
     return redirect('/friend')
 def debit(request,username):
@@ -161,7 +161,7 @@ def friendpage(request,username):
     credit_balance = float((remain / count) * credit_sum)
     extra=credit_balance-getback_sum
     return render(request, 'friendpage.html',{'username':username,'value':data,'balance':balance,'get_back':extra})
-def transcdelete(id):
+def transcdelete(request,id):
     Table.objects.get(id=id).delete()
     latest_record = Table.objects.all().order_by('-id').first()
     if latest_record is not None:
